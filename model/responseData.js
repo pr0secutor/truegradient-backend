@@ -2,6 +2,9 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const responseDataSchema = new Schema({
+  created_by: {
+    type: String
+  },
   question: {
     type: String,
     required: true,

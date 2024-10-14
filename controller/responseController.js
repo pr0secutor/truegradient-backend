@@ -2,7 +2,14 @@ const responseModel = require("../model/responseData");
 const { AppError, Success } = require("../utils");
 
 const getResponses = async (req, res) => {
-  const responses = await responseModel.find();
+  const { email } = req.query;
+  let responses;
+
+  if (email === "admin@gmail.com") {
+    responses = await responseModel.find();
+  } else {
+    responses = await responseModel.find({ created_by: email });
+  }
 
   if (!responses) return res.status(404).json(AppError("No data found..."));
 
@@ -32,9 +39,7 @@ const saveResponse = async (req, res) => {
     });
 
     if (existingResponse) {
-      return res
-        .status(409)
-        .json(AppError("Response already exists."));
+      return res.status(409).json(AppError("Response already exists."));
     }
 
     await responseModel.create({
@@ -48,13 +53,11 @@ const saveResponse = async (req, res) => {
 
     return res.status(200).json(Success("Response saved..."));
   } catch (err) {
-    return res
-      .status(500)
-      .json({
-        success: false,
-        message: "Error saving response.",
-        error: err.message,
-      });
+    return res.status(500).json({
+      success: false,
+      message: "Error saving response.",
+      error: err.message,
+    });
   }
 };
 
