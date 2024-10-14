@@ -20,6 +20,7 @@ const getResponses = async (req, res) => {
 
 const saveResponse = async (req, res) => {
   const {
+    created_by,
     question,
     summary,
     result_text,
@@ -30,6 +31,7 @@ const saveResponse = async (req, res) => {
 
   try {
     const existingResponse = await responseModel.findOne({
+      created_by,
       question,
       summary,
       result_text,
@@ -43,6 +45,7 @@ const saveResponse = async (req, res) => {
     }
 
     await responseModel.create({
+      created_by,
       question,
       summary,
       result_text,
